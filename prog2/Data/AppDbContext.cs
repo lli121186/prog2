@@ -1,4 +1,5 @@
 ﻿using System;
+using Microsoft.EntityFrameworkCore;
 using prog2.Models;
 
 namespace prog2.Data
@@ -11,6 +12,11 @@ namespace prog2.Data
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder.UseSqlite("Filename=adressen.db");
+        }
+
+        internal async Task SaveChangesAsync()
+        {
+            throw new NotImplementedException();
         }
     }
 }

@@ -1,7 +1,21 @@
-﻿ xmlCode kopieren<?xml version="1.0" encoding="utf-8" ?>
-<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"xmlns:local="clr-namespace:CSVApp"x:Class="CSVApp.MainPage">
-    <VerticalStackLayout Padding="10">
-        <Button Text="CSV-Datei öffnen" Clicked="OnOpenCsvClicked" />
-        <DataGrid x:Name="csvDataGrid" AutoGenerateColumns="True" />
-    </VerticalStackLayout>
+﻿<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="prog2.MainPage">
+
+    <StackLayout>
+        <Button Text="Öffne CSV-Datei"
+                Clicked="OnOpenCsvClicked" />
+
+        <CollectionView x:Name="csvCollectionView">
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+                    <StackLayout Orientation="Horizontal">
+                        <Label Text="{Binding Column1}" />
+                        <Label Text="{Binding Column2}" />
+                        <!-- Add more labels for additional columns as needed -->
+                    </StackLayout>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+    </StackLayout>
 </ContentPage>

@@ -1,4 +1,7 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using prog2.Data;
+using prog2.Models;
+using System;
 namespace prog2.Repositories
 {
     public class AdresseRepository
