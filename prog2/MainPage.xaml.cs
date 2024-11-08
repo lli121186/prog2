@@ -1,67 +1,65 @@
-﻿using CsvHelper;
-using System.Globalization;
-using CommunityToolkit.Maui;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.Maui.Controls;
+using Microsoft.Maui.Storage;
+using prog2.Models;
 
-namespace prog2
+namespace prog2;
+
+public partial class MainPage : ContentPage
 {
-    // Define a class that represents the structure of your CSV records
-    public class CsvRecord
+    private readonly DatabaseService _databaseService;
+    private readonly CsvHandler _csvHandler;
+
+    public MainPage()
     {
-        public string Column1 { get; set; } // Adjust properties based on your CSV structure
-        public string Column2 { get; set; }
-        // Add more properties as needed
+        InitializeComponent();
+        _databaseService = new DatabaseService();
+        _csvHandler = new CsvHandler();
     }
 
-    public partial class MainPage : ContentPage
+    private async void LoadCsv_Click(object sender, EventArgs e)
     {
-        public MainPage()
+        var result = await FilePicker.PickAsync(new PickOptions
         {
-            InitializeComponent();
+            FileTypes = new FilePickerFileType(new Dictionary<DevicePlatform, IEnumerable<string>>
+        {
+            { DevicePlatform.WinUI, new[] { ".csv" } },
+            { DevicePlatform.iOS, new[] { "public.comma-separated-values-text" } },
+            { DevicePlatform.Android, new[] { "text/csv" } }
+        }),
+            PickerTitle = "Please select a CSV file"
+        });
+
+        if (result != null)
+        {
+            var filePath = result.FullPath;
+            List<Address> addresses = await Task.Run(() => _csvHandler.LoadCsv(filePath));
+
+            // Ensure addresses are split correctly and save to the database
+            foreach (var address in addresses)
+            {
+                // Handle Location creation separately and assign LocationId
+                if (address.Location != null)
+                {
+                    // Save Location first and get the LocationId
+                    await _databaseService.SaveLocationAsync(address.Location);
+                }
+            }
+
+            // Save addresses to the database (including LocationId if necessary)
+            await _databaseService.SaveAddressesAsync(addresses);
+
+            // Reload the addresses from the database to update the UI
+            var savedAddresses = await _databaseService.GetAddressesAsync();
+            AddressCollectionView.ItemsSource = savedAddresses;
         }
-
-        private async void OnOpenCsvClicked(object sender, EventArgs e)
+        else
         {
-            try
-            {
-                var csvFileType = new FilePickerFileType(new Dictionary<DevicePlatform, IEnumerable<string>>
-                {
-                    { DevicePlatform.Android, new[] { "text/csv" } },
-                    { DevicePlatform.iOS, new[] { "public.comma-separated-values-text" } },
-                    { DevicePlatform.WinUI, new[] { ".csv" } }
-                });
-
-                var fileResult = await FilePicker.Default.PickAsync(new PickOptions
-                {
-                    PickerTitle = "Bitte wähle eine CSV-Datei aus",
-                    FileTypes = csvFileType
-                });
-
-                // Check if the user cancelled the file picker
-                if (fileResult == null)
-                {
-                    return; // Exit if no file was selected
-                }
-
-                var stream = await fileResult.OpenReadAsync();
-                using (var reader = new StreamReader(stream))
-                using (var csv = new CsvReader(reader, CultureInfo.InvariantCulture))
-                {
-                    var records = csv.GetRecords<CsvRecord>().ToList(); // Use strongly typed class
-                    csvCollectionView.ItemsSource = records; // Set the items source for CollectionView
-                }
-            }
-            catch (CsvHelperException csvEx)
-            {
-                await DisplayAlert("Fehler", "Fehler beim Verarbeiten der CSV-Datei: " + csvEx.Message, "OK");
-            }
-            catch (Exception ex)
-            {
-                await DisplayAlert("Fehler", "Fehler beim Öffnen der Datei: " + ex.Message, "OK");
-            }
+            await DisplayAlert("Error", "No file selected.", "OK");
         }
     }
+
 }

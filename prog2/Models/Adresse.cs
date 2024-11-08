@@ -1,16 +1,21 @@
-﻿using System;
+﻿using SQLite;
+
 namespace prog2.Models
 {
-    public class Adresse
+    public class Address
     {
+        [PrimaryKey, AutoIncrement]
         public int Id { get; set; }
+
         public string Vorname { get; set; }
-        public string Nachname { get; set; }
+        public string Name { get; set; }
         public string Firma { get; set; }
         public string Strasse { get; set; }
-        public int PLZ { get; set; }
-        public int OrtschaftId { get; set; }
-        public Ortschaft Ortschaft { get; set; }
+        public string Hausnummer { get; set; }
+
+        public int LocationId { get; set; }
+
+        [Ignore]
+        public Location Location { get; set; }
     }
 }
-
