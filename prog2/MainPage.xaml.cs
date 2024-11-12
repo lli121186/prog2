@@ -54,6 +54,8 @@ public partial class MainPage : ContentPage
 
             // Reload the addresses from the database to update the UI
             var savedAddresses = await _databaseService.GetAddressesAsync();
+            await DisplayAlert("Error", savedAddresses[0].Vorname.ToString(), "OK");
+            AddressCollectionView.ItemsSource = null;
             AddressCollectionView.ItemsSource = savedAddresses;
         }
         else
@@ -61,5 +63,8 @@ public partial class MainPage : ContentPage
             await DisplayAlert("Error", "No file selected.", "OK");
         }
     }
-
+    private async void DeleteAllAddresses_Click(object sender, EventArgs e)
+    {
+        await _databaseService.DeleteAllAddressesAsync();
+    }
 }

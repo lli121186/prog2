@@ -9,29 +9,88 @@
         <Button Text="Load CSV" Clicked="LoadCsv_Click"
                 HorizontalOptions="Center" />
 
-        <!-- CollectionView to display the CSV data -->
-        <CollectionView x:Name="AddressCollectionView"
-                        VerticalOptions="FillAndExpand"
-                        HorizontalOptions="FillAndExpand">
+        <!-- Button to delete all addresses -->
+        <Button Text="Delete All Addresses" Clicked="DeleteAllAddresses_Click"
+                HorizontalOptions="Center" />
 
-            <CollectionView.ItemTemplate>
-                <DataTemplate>
-                    <Frame BorderColor="LightGray" Padding="10" Margin="5" CornerRadius="5">
-                        <VerticalStackLayout Spacing="5">
-                            <!-- Display each CSV field -->
-                            <Label Text="{Binding Vorname}" FontSize="16" />
-                            <Label Text="{Binding Name}" FontSize="16" />
-                            <Label Text="{Binding Firma}" FontSize="16" />
-                            <Label Text="{Binding Strasse}" FontSize="16" />
-                            <Label Text="{Binding Hausnummer}" FontSize="16" />
-                            <Label Text="{Binding Location.Ortschaft}" FontSize="16" />
-                            <Label Text="{Binding Location.Postleitzahl}" FontSize="16" />
-                        </VerticalStackLayout>
-                    </Frame>
-                </DataTemplate>
-            </CollectionView.ItemTemplate>
+        <!-- ScrollView to enable vertical scrolling only -->
+        <ScrollView Orientation="Vertical" VerticalOptions="FillAndExpand">
+            <CollectionView x:Name="AddressCollectionView"
+                            VerticalOptions="FillAndExpand"
+                            HorizontalOptions="Fill"
+                            VerticalScrollBarVisibility="Always">
 
-        </CollectionView>
+                <!-- Define the layout of items -->
+                <CollectionView.ItemsLayout>
+                    <LinearItemsLayout Orientation="Vertical" />
+                </CollectionView.ItemsLayout>
 
+                <!-- Header template for column titles -->
+                <CollectionView.Header>
+                    <Grid ColumnSpacing="1" RowSpacing="1" BackgroundColor="LightGray">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+
+                        <Label Text="ID" FontSize="12" FontAttributes="Bold" Padding="5" BackgroundColor="LightGray" TextColor="Black" Grid.Column="0" />
+                        <Label Text="Vorname" FontSize="12" FontAttributes="Bold" Padding="5" BackgroundColor="LightGray" TextColor="Black" Grid.Column="1" />
+                        <Label Text="Name" FontSize="12" FontAttributes="Bold" Padding="5" BackgroundColor="LightGray" TextColor="Black" Grid.Column="2" />
+                        <Label Text="Firma" FontSize="12" FontAttributes="Bold" Padding="5" BackgroundColor="LightGray" TextColor="Black" Grid.Column="3" />
+                        <Label Text="Strasse" FontSize="12" FontAttributes="Bold" Padding="5" BackgroundColor="LightGray" TextColor="Black" Grid.Column="4" />
+                        <Label Text="Hausnummer" FontSize="12" FontAttributes="Bold" Padding="5" BackgroundColor="LightGray" TextColor="Black" Grid.Column="5" />
+                        <Label Text="Postleitzahl" FontSize="12" FontAttributes="Bold" Padding="5" BackgroundColor="LightGray" TextColor="Black" Grid.Column="6" />
+                        <Label Text="Ortschaft" FontSize="12" FontAttributes="Bold" Padding="5" BackgroundColor="LightGray" TextColor="Black" Grid.Column="7" />
+                    </Grid>
+                </CollectionView.Header>
+
+                <!-- Item template for each address row -->
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <Frame BorderColor="Gray" Padding="0" Margin="0" CornerRadius="0">
+                            <Grid ColumnSpacing="1" RowSpacing="1" BackgroundColor="White">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+
+                                <!-- Display each CSV field in a bordered cell style -->
+                                <Label Text="{Binding Id}" FontSize="12" Padding="5" BackgroundColor="White" VerticalTextAlignment="Center" HorizontalTextAlignment="Center" Grid.Column="0" TextColor="Black" />
+                                <Label Text="{Binding Vorname}" FontSize="12" Padding="5" BackgroundColor="White" VerticalTextAlignment="Center" HorizontalTextAlignment="Center" Grid.Column="1" TextColor="Black"/>
+                                <Label Text="{Binding Name}" FontSize="12" Padding="5" BackgroundColor="White" VerticalTextAlignment="Center" HorizontalTextAlignment="Center" Grid.Column="2" TextColor="Black"/>
+                                <Label Text="{Binding Firma}" FontSize="12" Padding="5" BackgroundColor="White" VerticalTextAlignment="Center" HorizontalTextAlignment="Center" Grid.Column="3" TextColor="Black"/>
+                                <Label Text="{Binding Strasse}" FontSize="12" Padding="5" BackgroundColor="White" VerticalTextAlignment="Center" HorizontalTextAlignment="Center" Grid.Column="4" TextColor="Black"/>
+                                <Label Text="{Binding Hausnummer}" FontSize="12" Padding="5" BackgroundColor="White" VerticalTextAlignment="Center" HorizontalTextAlignment="Center" Grid.Column="5" TextColor="Black"/>
+                                <Label Text="{Binding Location.Postleitzahl}" FontSize="12" Padding="5" BackgroundColor="White" VerticalTextAlignment="Center" HorizontalTextAlignment="Center" Grid.Column="6" TextColor="Black" />
+                                <Label Text="{Binding Location.Ortschaft}" FontSize="12" Padding="5" BackgroundColor="White" VerticalTextAlignment="Center" HorizontalTextAlignment="Center" Grid.Column="7" TextColor="Black"/>
+                            </Grid>
+                        </Frame>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+
+                <!-- Sample Data (for demonstration, can be removed) -->
+                <CollectionView.ItemsSource>
+                    <x:Array Type="{x:Type x:String}">
+                        <x:String>Sample Address 1</x:String>
+                        <x:String>Sample Address 2</x:String>
+                        <x:String>Sample Address 3</x:String>
+                        <!-- Add more items as needed -->
+                    </x:Array>
+                </CollectionView.ItemsSource>
+
+            </CollectionView>
+        </ScrollView>
     </VerticalStackLayout>
 </ContentPage>

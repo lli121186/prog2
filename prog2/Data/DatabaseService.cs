@@ -1,5 +1,6 @@
 ﻿using prog2.Models;
 using SQLite;
+using System.Net;
 
 public class DatabaseService
 {
@@ -7,20 +8,32 @@ public class DatabaseService
 
     public DatabaseService()
     {
-        var dbPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Addresses.db3");
+        var dbPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "AddressesV2.db3");
         _database = new SQLiteAsyncConnection(dbPath);
         _database.CreateTableAsync<Address>().Wait();
         _database.CreateTableAsync<prog2.Models.Location>().Wait();
     }
 
-    public Task<List<Address>> GetAddressesAsync()
+    public async Task<List<Address>> GetAddressesAsync()
     {
-        return _database.Table<Address>().ToListAsync();
+        var addresses = await _database.Table<Address>().ToListAsync();
+
+        // Populate Location for each Address
+        foreach (var address in addresses)
+        {
+            if (address.LocationId != 0)
+            {
+                address.Location = await _database.FindAsync<prog2.Models.Location>(address.LocationId);
+            }
+        }
+
+        return addresses;
     }
+
 
     public Task<int> SaveAddressAsync(Address address)
     {
-        return _database.InsertAsync(address);
+        return _database.InsertOrReplaceAsync(address);
     }
 
     public Task<int> SaveAddressesAsync(List<Address> addresses)
@@ -30,7 +43,7 @@ public class DatabaseService
 
     public Task<int> SaveLocationAsync(prog2.Models.Location location)
     {
-        return _database.InsertAsync(location);
+        return _database.InsertOrReplaceAsync(location);
     }
 
     public Task<int> DeleteAllAddressesAsync()
