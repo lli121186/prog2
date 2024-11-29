@@ -18,6 +18,7 @@ public partial class MainPage : ContentPage
         InitializeComponent();
         _databaseService = new DatabaseService();
         _csvHandler = new CsvHandler();
+        BindingContext = new MainPageViewModel();
     }
 
     private async void LoadCsv_Click(object sender, EventArgs e)
@@ -63,8 +64,48 @@ public partial class MainPage : ContentPage
             await DisplayAlert("Error", "No file selected.", "OK");
         }
     }
+
     private async void DeleteAllAddresses_Click(object sender, EventArgs e)
     {
         await _databaseService.DeleteAllAddressesAsync();
+    }
+
+    private void OnEntryTextChanged(object sender, TextChangedEventArgs e)
+    {
+        var viewModel = BindingContext as MainPageViewModel;
+        if (viewModel != null)
+        {
+            viewModel.IsSaveButtonVisible = true;
+
+            // Get the modified address from the binding context of the Entry
+            var entry = sender as Entry;
+            var modifiedAddress = entry?.BindingContext as Address;
+
+            if (modifiedAddress != null && !viewModel.ModifiedAddresses.Contains(modifiedAddress))
+            {
+                viewModel.ModifiedAddresses.Add(modifiedAddress);
+            }
+        }
+    }
+
+    private async void OnSaveButtonClicked(object sender, EventArgs e)
+    {
+        var viewModel = BindingContext as MainPageViewModel;
+        if (viewModel != null)
+        {
+            // Save each modified address to the database
+            foreach (var address in viewModel.ModifiedAddresses)
+            {
+                await _databaseService.SaveAddressAsync(address);
+            }
+
+            // After saving, hide the save button
+            viewModel.IsSaveButtonVisible = false;
+
+            // Optionally, you can reload the addresses from the database to update the UI
+            var savedAddresses = await _databaseService.GetAddressesAsync();
+            AddressCollectionView.ItemsSource = null;
+            AddressCollectionView.ItemsSource = savedAddresses;
+        }
     }
 }

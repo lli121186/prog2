@@ -60,14 +60,16 @@
                                 </Grid.ColumnDefinitions>
 
                                 <!-- Display each CSV field in a bordered cell style -->
-                                <Label Text="{Binding Id}" FontSize="12" Padding="5" BackgroundColor="White" VerticalTextAlignment="Center" HorizontalTextAlignment="Center" Grid.Column="0" TextColor="Black" />
-                                <Label Text="{Binding Vorname}" FontSize="12" Padding="5" BackgroundColor="White" VerticalTextAlignment="Center" HorizontalTextAlignment="Center" Grid.Column="1" TextColor="Black"/>
-                                <Label Text="{Binding Name}" FontSize="12" Padding="5" BackgroundColor="White" VerticalTextAlignment="Center" HorizontalTextAlignment="Center" Grid.Column="2" TextColor="Black"/>
-                                <Label Text="{Binding Firma}" FontSize="12" Padding="5" BackgroundColor="White" VerticalTextAlignment="Center" HorizontalTextAlignment="Center" Grid.Column="3" TextColor="Black"/>
-                                <Label Text="{Binding Strasse}" FontSize="12" Padding="5" BackgroundColor="White" VerticalTextAlignment="Center" HorizontalTextAlignment="Center" Grid.Column="4" TextColor="Black"/>
-                                <Label Text="{Binding Hausnummer}" FontSize="12" Padding="5" BackgroundColor="White" VerticalTextAlignment="Center" HorizontalTextAlignment="Center" Grid.Column="5" TextColor="Black"/>
-                                <Label Text="{Binding Location.Postleitzahl}" FontSize="12" Padding="5" BackgroundColor="White" VerticalTextAlignment="Center" HorizontalTextAlignment="Center" Grid.Column="6" TextColor="Black" />
-                                <Label Text="{Binding Location.Ortschaft}" FontSize="12" Padding="5" BackgroundColor="White" VerticalTextAlignment="Center" HorizontalTextAlignment="Center" Grid.Column="7" TextColor="Black"/>
+                                <Entry Text="{Binding Id}" FontSize="12" BackgroundColor="White" VerticalTextAlignment="Center" HorizontalTextAlignment="Center" Grid.Column="0" TextColor="Black" />
+                                <Entry Text="{Binding Vorname}" FontSize="12" BackgroundColor="White" VerticalTextAlignment="Center" HorizontalTextAlignment="Center" Grid.Column="1" TextColor="Black"/>
+                                <Entry Text="{Binding Name}" FontSize="12" BackgroundColor="White" VerticalTextAlignment="Center" HorizontalTextAlignment="Center" Grid.Column="2" TextColor="Black"/>
+                                <Entry Text="{Binding Firma}" FontSize="12" BackgroundColor="White" VerticalTextAlignment="Center" HorizontalTextAlignment="Center" Grid.Column="3" TextColor="Black"/>
+                                <Entry Text="{Binding Strasse}" FontSize="12" BackgroundColor="White" VerticalTextAlignment="Center" HorizontalTextAlignment="Center" Grid.Column="4" TextColor="Black"/>
+                                <Entry Text="{Binding Hausnummer}" FontSize="12" BackgroundColor="White" VerticalTextAlignment="Center" HorizontalTextAlignment="Center" Grid.Column="5" TextColor="Black"/>
+                                <Entry Text="{Binding Location.Postleitzahl}" FontSize="12" BackgroundColor="White" VerticalTextAlignment="Center" HorizontalTextAlignment="Center" Grid.Column="6" TextColor="Black" />
+                                <Entry Text="{Binding Location.Ortschaft}" FontSize="12" BackgroundColor="White" VerticalTextAlignment="Center" HorizontalTextAlignment="Center" Grid.Column="7" TextColor="Black"/>
+                            
+                                <Button Grid.Column="8" Text="Save" Grid.ColumnSpan="8" IsVisible="{Binding IsSaveButtonVisible}" Clicked="OnSaveButtonClicked"/>
                             </Grid>
                         </Frame>
                     </DataTemplate>
