@@ -19,8 +19,14 @@ public partial class MainPage : ContentPage
         _databaseService = new DatabaseService();
         _csvHandler = new CsvHandler();
         BindingContext = new MainPageViewModel();
+        InitializeAddressCollectionView();
     }
 
+    private async void InitializeAddressCollectionView()
+    {
+        AddressCollectionView.ItemsSource = await _databaseService.GetAddressesAsync();
+    }
+  
     private async void LoadCsv_Click(object sender, EventArgs e)
     {
         var result = await FilePicker.PickAsync(new PickOptions
