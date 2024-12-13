@@ -26,7 +26,7 @@ public partial class MainPage : ContentPage
     {
         AddressCollectionView.ItemsSource = await _databaseService.GetAddressesAsync();
     }
-  
+
     private async void LoadCsv_Click(object sender, EventArgs e)
     {
         var result = await FilePicker.PickAsync(new PickOptions
@@ -44,10 +44,20 @@ public partial class MainPage : ContentPage
         {
             var filePath = result.FullPath;
             List<Address> addresses = await Task.Run(() => _csvHandler.LoadCsv(filePath));
+            
+            //Ensure that the first row will be deleted if vorname==vorname
+            if (addresses.Count > 0)
+            {
+                if (addresses[0].Vorname == "vorname")
+                {
+                    addresses.RemoveAt(0); // delete first row
+                }
+            }
 
             // Ensure addresses are split correctly and save to the database
             foreach (var address in addresses)
             {
+
                 // Handle Location creation separately and assign LocationId
                 if (address.Location != null)
                 {
@@ -55,6 +65,7 @@ public partial class MainPage : ContentPage
                     await _databaseService.SaveLocationAsync(address.Location);
                 }
             }
+
 
             // Save addresses to the database (including LocationId if necessary)
             await _databaseService.SaveAddressesAsync(addresses);
