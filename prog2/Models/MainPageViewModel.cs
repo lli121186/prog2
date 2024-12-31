@@ -1,9 +1,11 @@
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using prog2.Models;
 
 public class MainPageViewModel : INotifyPropertyChanged
 {
     private bool _isSaveButtonVisible;
+    private ObservableCollection<Address> _addresses;
     private List<Address> _modifiedAddresses = new List<Address>();
 
     public bool IsSaveButtonVisible
@@ -13,6 +15,16 @@ public class MainPageViewModel : INotifyPropertyChanged
         {
             _isSaveButtonVisible = value;
             OnPropertyChanged(nameof(IsSaveButtonVisible));
+        }
+    }
+
+    public ObservableCollection<Address> Addresses
+    {
+        get => _addresses;
+        set
+        {
+            _addresses = value;
+            OnPropertyChanged(nameof(Addresses));
         }
     }
 

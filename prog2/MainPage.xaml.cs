@@ -5,6 +5,8 @@ using System.Threading.Tasks;
 using Microsoft.Maui.Controls;
 using Microsoft.Maui.Storage;
 using prog2.Models;
+using Syncfusion.Maui.ListView;
+using System.Collections.ObjectModel;
 
 namespace prog2;
 
@@ -24,7 +26,12 @@ public partial class MainPage : ContentPage
 
     private async void InitializeAddressCollectionView()
     {
-        AddressCollectionView.ItemsSource = await _databaseService.GetAddressesAsync();
+        var viewModel = BindingContext as MainPageViewModel;
+        if (viewModel != null)
+        {
+            var addresses = await _databaseService.GetAddressesAsync();
+            viewModel.Addresses = new ObservableCollection<Address>(addresses);
+        }
     }
 
     private async void LoadCsv_Click(object sender, EventArgs e)
@@ -44,36 +51,31 @@ public partial class MainPage : ContentPage
         {
             var filePath = result.FullPath;
             List<Address> addresses = await Task.Run(() => _csvHandler.LoadCsv(filePath));
-            
-            //Ensure that the first row will be deleted if vorname==vorname
-            if (addresses.Count > 0)
+
+            // Ensure that the first row will be deleted if vorname==vorname
+            if (addresses.Count > 0 && addresses[0].Vorname == "vorname")
             {
-                if (addresses[0].Vorname == "vorname")
-                {
-                    addresses.RemoveAt(0); // delete first row
-                }
+                addresses.RemoveAt(0); // delete first row
             }
 
-            // Ensure addresses are split correctly and save to the database
+            // Save locations and addresses
             foreach (var address in addresses)
             {
-
-                // Handle Location creation separately and assign LocationId
                 if (address.Location != null)
                 {
-                    // Save Location first and get the LocationId
                     await _databaseService.SaveLocationAsync(address.Location);
                 }
             }
 
-
-            // Save addresses to the database (including LocationId if necessary)
             await _databaseService.SaveAddressesAsync(addresses);
 
-            // Reload the addresses from the database to update the UI
-            var savedAddresses = await _databaseService.GetAddressesAsync();
-            AddressCollectionView.ItemsSource = null;
-            AddressCollectionView.ItemsSource = savedAddresses;
+            // Reload the addresses
+            var viewModel = BindingContext as MainPageViewModel;
+            if (viewModel != null)
+            {
+                var savedAddresses = await _databaseService.GetAddressesAsync();
+                viewModel.Addresses = new ObservableCollection<Address>(savedAddresses);
+            }
         }
         else
         {
@@ -84,28 +86,29 @@ public partial class MainPage : ContentPage
     private async void DeleteAllAddresses_Click(object sender, EventArgs e)
     {
         await _databaseService.DeleteAllAddressesAsync();
+
+        // Clear UI
+        var viewModel = BindingContext as MainPageViewModel;
+        if (viewModel != null)
+        {
+            viewModel.Addresses.Clear();
+        }
     }
 
     private async void OnSaveButtonClicked(object sender, EventArgs e)
     {
-        await DisplayAlert("Error", "No file selected.", "OK");
-
         var viewModel = BindingContext as MainPageViewModel;
         if (viewModel != null)
         {
-            // Save each modified address to the database
             foreach (var address in viewModel.ModifiedAddresses)
             {
                 await _databaseService.SaveAddressAsync(address);
             }
 
-            // After saving, hide the save button
             viewModel.IsSaveButtonVisible = false;
 
-            // Optionally, you can reload the addresses from the database to update the UI
             var savedAddresses = await _databaseService.GetAddressesAsync();
-            AddressCollectionView.ItemsSource = null;
-            AddressCollectionView.ItemsSource = savedAddresses;
+            viewModel.Addresses = new ObservableCollection<Address>(savedAddresses);
         }
     }
 }

@@ -3,22 +3,18 @@
              x:Class="prog2.MainPage"
              Title="CSV Address Viewer">
 
-    <!-- ScrollView for entire page content -->
     <ScrollView Orientation="Vertical" VerticalOptions="FillAndExpand" VerticalScrollBarVisibility="Always">
         <VerticalStackLayout Padding="10" Spacing="10">
 
-            <!-- Button to load CSV file -->
             <Button Text="Load CSV" Clicked="LoadCsv_Click"
                     HorizontalOptions="Center" />
 
-            <!-- Button to delete all addresses -->
             <Button Text="Delete All Addresses" Clicked="DeleteAllAddresses_Click"
                     HorizontalOptions="Center" />
 
-            <!-- CollectionView for the address list -->
-            <CollectionView x:Name="AddressCollectionView" VerticalOptions="FillAndExpand" WidthRequest="1000">
+            <CollectionView x:Name="AddressCollectionView" ItemsSource="{Binding Addresses}"
+                            VerticalOptions="FillAndExpand" WidthRequest="1000">
 
-                <!-- Header template for column titles -->
                 <CollectionView.Header>
                     <Grid ColumnSpacing="1" RowSpacing="1" BackgroundColor="LightGray">
                         <Grid.ColumnDefinitions>
@@ -30,7 +26,7 @@
                             <ColumnDefinition Width="*" />
                             <ColumnDefinition Width="*" />
                             <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="Auto" /> <!-- Added column definition for the button -->
+                            <ColumnDefinition Width="Auto" />
                         </Grid.ColumnDefinitions>
 
                         <Label Text="ID" FontSize="12" FontAttributes="Bold" Padding="5" BackgroundColor="LightGray" TextColor="Black" Grid.Column="0" />
@@ -45,7 +41,6 @@
                     </Grid>
                 </CollectionView.Header>
 
-                <!-- Item template for each address row -->
                 <CollectionView.ItemTemplate>
                     <DataTemplate>
                         <Frame BorderColor="Gray" Padding="0" Margin="0" CornerRadius="0">
@@ -59,10 +54,9 @@
                                     <ColumnDefinition Width="*" />
                                     <ColumnDefinition Width="*" />
                                     <ColumnDefinition Width="*" />
-                                    <ColumnDefinition Width="Auto" /> <!-- Added column definition for the button -->
+                                    <ColumnDefinition Width="Auto" />
                                 </Grid.ColumnDefinitions>
 
-                                <!-- Display each CSV field in a bordered cell style -->
                                 <Entry Text="{Binding Id}" FontSize="12" BackgroundColor="White" VerticalTextAlignment="Center" HorizontalTextAlignment="Center" Grid.Column="0" TextColor="Black" />
                                 <Entry Text="{Binding Vorname}" FontSize="12" BackgroundColor="White" VerticalTextAlignment="Center" HorizontalTextAlignment="Center" Grid.Column="1" TextColor="Black"/>
                                 <Entry Text="{Binding Name}" FontSize="12" BackgroundColor="White" VerticalTextAlignment="Center" HorizontalTextAlignment="Center" Grid.Column="2" TextColor="Black"/>
@@ -72,7 +66,8 @@
                                 <Entry Text="{Binding Location.Postleitzahl}" FontSize="12" BackgroundColor="White" VerticalTextAlignment="Center" HorizontalTextAlignment="Center" Grid.Column="6" TextColor="Black" />
                                 <Entry Text="{Binding Location.Ortschaft}" FontSize="12" BackgroundColor="White" VerticalTextAlignment="Center" HorizontalTextAlignment="Center" Grid.Column="7" TextColor="Black"/>
 
-                                <Button Grid.Column="8" Text="Save" Grid.ColumnSpan="1" IsVisible="{Binding IsSaveButtonVisible}" Clicked="OnSaveButtonClicked" HorizontalOptions="End" />
+                                <Button Grid.Column="8" Text="Save" Grid.ColumnSpan="1" IsVisible="{Binding IsSaveButtonVisible}"
+                                        Clicked="OnSaveButtonClicked" HorizontalOptions="End" />
                             </Grid>
                         </Frame>
                     </DataTemplate>
