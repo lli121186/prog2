@@ -16,6 +16,6 @@ namespace prog2.Models
         public int LocationId { get; set; }
 
         [Ignore]
-        public Location Location { get; set; }
+        public Locations Location { get; set; }
     }
 }

@@ -22,7 +22,7 @@ public class CsvHandler
                 Firma = columns[2],
                 Strasse = columns[3],
                 Hausnummer = columns[4],
-                Location = new prog2.Models.Location
+                Location = new Locations
                 {
                     Postleitzahl = columns[5],
                     Ortschaft = columns[6]

@@ -61,7 +61,6 @@ public partial class MainPage : ContentPage
 
             // Reload the addresses from the database to update the UI
             var savedAddresses = await _databaseService.GetAddressesAsync();
-            await DisplayAlert("Error", savedAddresses[0].Vorname.ToString(), "OK");
             AddressCollectionView.ItemsSource = null;
             AddressCollectionView.ItemsSource = savedAddresses;
         }
@@ -76,26 +75,10 @@ public partial class MainPage : ContentPage
         await _databaseService.DeleteAllAddressesAsync();
     }
 
-    private void OnEntryTextChanged(object sender, TextChangedEventArgs e)
-    {
-        var viewModel = BindingContext as MainPageViewModel;
-        if (viewModel != null)
-        {
-            viewModel.IsSaveButtonVisible = true;
-
-            // Get the modified address from the binding context of the Entry
-            var entry = sender as Entry;
-            var modifiedAddress = entry?.BindingContext as Address;
-
-            if (modifiedAddress != null && !viewModel.ModifiedAddresses.Contains(modifiedAddress))
-            {
-                viewModel.ModifiedAddresses.Add(modifiedAddress);
-            }
-        }
-    }
-
     private async void OnSaveButtonClicked(object sender, EventArgs e)
     {
+        await DisplayAlert("Error", "No file selected.", "OK");
+
         var viewModel = BindingContext as MainPageViewModel;
         if (viewModel != null)
         {

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace prog2.Models
 {
-    public class Location
+    public class Locations
     {
         [PrimaryKey, AutoIncrement]
         public int Id { get; set; }
